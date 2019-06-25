@@ -1,0 +1,98 @@
+syntax = "proto3";
+package players;
+
+enum EntityType {
+  PLAYER = 0;
+  DOG = 1;
+  CAT = 2;
+  CROCODILE = 3;
+}
+
+message LookRequest {
+  string gender = 1;
+  string figure = 2;
+  EntityType entity_type = 3;
+}
+
+message LookResponse {
+  string new_gender = 1;
+  string new_figure = 2;
+}
+
+message MottoRequest {
+  string new_motto = 1;
+}
+
+message MottoResponse {
+  bool successful = 1;
+  string new_motto = 2;
+}
+
+enum CurrencyType {
+  CREDITS = 0;
+  TICKETS = 1;
+  FILM = 2;
+  PIXELS = 3;
+  DUCKETS = 4;
+  RESPECT = 5;
+}
+
+message CurrencyRequest {
+  uint32 amount = 1;
+  CurrencyType currency_type = 2;
+}
+
+message CurrencyResponse {
+  uint32 new_amount = 1;
+  CurrencyType currency_type = 2;
+}
+
+enum HashingError {
+  RESOURCES_EXHAUSTED = 0;
+  TOO_MANY_ATTEMPTS = 1;
+}
+
+message PasswordResponse {
+  bool ok = 1;
+  HashingError error = 2;
+}
+
+
+message CompareHashRequest {
+  string password = 1;
+}
+
+message CompareHashResponse {
+  bool valid = 1;
+  HashingError error = 2;
+  bool needs_rehash = 3;
+}
+
+message NameRequest {
+  string new_name = 1;
+}
+
+enum NameError {
+  TAKEN = 0;
+  NOT_ALLOWED = 1;
+}
+
+message NameResponse {
+  bool ok = 1;
+  NameError error = 2;
+}
+
+message ChangePasswordRequest {
+  string current_password = 1;
+  string new_password = 2;
+}
+
+service Player { 
+  rpc CompareHash(CompareHashRequest) returns (CompareHashResponse) {}
+  rpc ChangeLook(LookRequest) returns (LookResponse) {}
+  rpc ChangeName(NameRequest) returns (NameResponse) {}
+  rpc ChangePassword(ChangePasswordRequest) returns (PasswordResponse) {}
+  rpc ChangeMotto(MottoRequest) returns (MottoResponse) {}
+  rpc IncreaseCurrency(CurrencyRequest) returns (CurrencyResponse) {}
+  rpc DecreaseCurrency(CurrencyRequest) returns (CurrencyResponse) {}
+}
