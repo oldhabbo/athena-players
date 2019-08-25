@@ -1,13 +1,6 @@
 syntax = "proto3";
 package players;
 
-enum EntityType {
-  PLAYER = 0;
-  DOG = 1;
-  CAT = 2;
-  CROCODILE = 3;
-}
-
 message LookRequest {
   string gender = 1;
   string figure = 2;
@@ -87,12 +80,29 @@ message ChangePasswordRequest {
   string new_password = 2;
 }
 
-service Player { 
+// Partitioned by UserUUID
+service Purse {
+  rpc ListCurrencies(CurrenciesRequest) returns (CurrenciesResponse) {} // GET_CREDITS, 8
+  rpc Deposit(CurrencyRequest) returns (CurrencyResponse) {}
+  rpc Withdraw(CurrencyRequest) returns (CurrencyResponse) {}
+  rpc ListTransactionLog(CurrencyLogRequest) returns (CurrencyLogResponse) {} // GETUSERCREDITLOG, 127
+  rpc RedeemVoucher(RedeemRequest) returns (RedeemResponse) {} // REDEEM_VOUCHER, 129
+}
+
+service User {
   rpc CompareHash(CompareHashRequest) returns (CompareHashResponse) {}
   rpc ChangeLook(LookRequest) returns (LookResponse) {}
   rpc ChangeName(NameRequest) returns (NameResponse) {}
   rpc ChangePassword(ChangePasswordRequest) returns (PasswordResponse) {}
   rpc ChangeMotto(MottoRequest) returns (MottoResponse) {}
-  rpc IncreaseCurrency(CurrencyRequest) returns (CurrencyResponse) {}
-  rpc DecreaseCurrency(CurrencyRequest) returns (CurrencyResponse) {}
 }
+
+service Player {
+  rpc CompareHash(CompareHashRequest) returns (CompareHashResponse) {}
+  rpc ChangeLook(LookRequest) returns (LookResponse) {}
+  rpc ChangeName(NameRequest) returns (NameResponse) {}
+  rpc ChangeMotto(MottoRequest) returns (MottoResponse) {}
+}
+
+service Login {
+  rpc Try 
